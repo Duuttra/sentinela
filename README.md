@@ -5,7 +5,7 @@
 **Detector de ataques em logs de SSH e servidores web, com mapeamento para o MITRE ATT&CK.**
 
 [![CI](https://github.com/Duuttra/sentinela/actions/workflows/ci.yml/badge.svg)](https://github.com/Duuttra/sentinela/actions)
-![Python](https://img.shields.io/badge/python-3.9%2B-blue)
+![Python](https://img.shields.io/badge/python-3.11%2B-blue)
 ![Dependências](https://img.shields.io/badge/depend%C3%AAncias-zero-brightgreen)
 ![Licença](https://img.shields.io/badge/licen%C3%A7a-MIT-lightgrey)
 

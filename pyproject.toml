@@ -8,7 +8,7 @@ version = "1.0.0"
 description = "Detector de ataques em logs de SSH e servidores web, com mapeamento MITRE ATT&CK"
 readme = "README.md"
 license = { text = "MIT" }
-requires-python = ">=3.9"
+requires-python = ">=3.11"
 dependencies = []
 keywords = ["security", "blue-team", "soc", "log-analysis", "intrusion-detection", "mitre-attack"]
 classifiers = [
