@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sentinela"
+version = "1.0.0"
+description = "Detector de ataques em logs de SSH e servidores web, com mapeamento MITRE ATT&CK"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+dependencies = []
+keywords = ["security", "blue-team", "soc", "log-analysis", "intrusion-detection", "mitre-attack"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Topic :: Security",
+    "Environment :: Console",
+    "License :: OSI Approved :: MIT License",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+sentinela = "sentinela.cli:main"
+
+[tool.setuptools]
+packages = ["sentinela"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
