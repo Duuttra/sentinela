@@ -41,8 +41,9 @@ aconteceu, quem fez, se funcionou e o que fazer**, com cada achado mapeado para 
 - **Tempo real:** `sentinela monitorar` acompanha os logs como um `tail -f` e emite alertas na hora.
 - **Integração com CI e cron:** `--falhar-em alta` retorna o código de saída 1 quando aparece algo grave.
 - **Zero dependências:** só a biblioteca padrão do Python. Roda em qualquer servidor.
-- **Seguro contra o próprio log:** logs de ataque contêm payloads XSS, então todo conteúdo é escapado
-  no HTML (e há teste garantindo isso).
+- **Seguro contra o próprio log:** logs de ataque são entrada hostil. O HTML escapa payloads XSS, o
+  terminal neutraliza sequências de escape ANSI e as regex resistem a ReDoS, tudo coberto por testes
+  (veja o [modelo de ameaça](SECURITY.md)).
 
 ## Início rápido
 
@@ -169,9 +170,9 @@ pip install pytest
 python3 -m pytest -v
 ```
 
-São 56 testes cobrindo parsers (IPv6, aspas escapadas, `.gz`, linhas malformadas), cada regra,
+São 60 testes cobrindo parsers (IPv6, aspas escapadas, `.gz`, linhas malformadas), cada regra,
 casos que **não** devem disparar (tráfego normal, erro de digitação na senha, falhas antigas),
-o escape de XSS no relatório e o fluxo completo da CLI.
+o escape de XSS no relatório, a resistência a ReDoS e a injeção de escape no terminal, e o fluxo completo da CLI. Veja também a [política de segurança](SECURITY.md).
 
 ## Roadmap
 

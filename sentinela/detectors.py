@@ -177,7 +177,7 @@ SIGNATURES: List[Signature] = [
             r"<\s*/?\s*script\b",
             r"javascript\s*:",
             r"\bon(?:error|load|mouseover|focus|click|toggle)\s*=",
-            r"<\s*(?:svg|img|iframe|body)\b[^>]*>",
+            r"<\s*(?:svg|img|iframe|body)\b[^>]{0,256}>",  # limitado: evita backtracking quadrático
             r"document\.(?:cookie|domain)",
         ],
         ["T1190", "T1059.007"],

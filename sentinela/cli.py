@@ -61,12 +61,26 @@ BANNER = r"""
 """
 
 
+# Caracteres de controle C0 (exceto nenhum), DEL e C1 (inclui CSI \x9b).
+_CONTROL = {c: f"\\x{c:02x}" for c in [*range(0x20), 0x7F, *range(0x80, 0xA0)]}
+
+
+def safe(text: str) -> str:
+    """Neutraliza caracteres de controle vindos dos logs antes de imprimir.
+
+    O conteúdo dos logs é controlado pelo atacante (ex.: nome de usuário SSH).
+    Sem isso, sequências ANSI/OSC poderiam limpar a tela, alterar o título da
+    janela ou esconder alertas no terminal do analista.
+    """
+    return text.translate(_CONTROL)
+
+
 def _print_alert(o: _Out, a: Alert) -> None:
     print(f"{o.sev(a.severity)} {o.c(_DIM, a.rule_id)} {o.c(_BOLD, a.title)} "
-          f"— {o.c(_GREEN, a.ip)} {o.c(_DIM, f'({a.count} evento(s), {a.first_seen:%d/%m %H:%M})')}")
-    print(f"          {a.description}")
+          f"— {o.c(_GREEN, safe(a.ip))} {o.c(_DIM, f'({a.count} evento(s), {a.first_seen:%d/%m %H:%M})')}")
+    print(f"          {safe(a.description)}")
     for n in a.notes:
-        print(f"          {o.c(_COLOR[Severity.MEDIA], '⚠ ' + n)}")
+        print(f"          {o.c(_COLOR[Severity.MEDIA], '⚠ ' + safe(n))}")
     mitre = ", ".join(f"{t} {technique_name(t)}" for t in a.mitre)
     print(f"          {o.c(_DIM, 'MITRE ATT&CK: ' + mitre)}\n")
 
@@ -76,7 +90,7 @@ def _print_summary(o: _Out, events: Sequence[Event], alerts: Sequence[Alert],
     print(o.c(_GREEN, BANNER))
     print(o.c(_DIM, f"  v{__version__} · detector de ataques em logs SSH e web\n"))
     for s in stats:
-        print(f"  📄 {s.path}: {s.lines} linhas, {s.parsed} eventos relevantes")
+        print(f"  📄 {safe(s.path)}: {s.lines} linhas, {s.parsed} eventos relevantes")
     if events:
         print(f"  🕒 período: {events[0].timestamp:%d/%m/%Y %H:%M} → {events[-1].timestamp:%d/%m/%Y %H:%M}")
     print()
@@ -89,7 +103,7 @@ def _print_summary(o: _Out, events: Sequence[Event], alerts: Sequence[Alert],
 
     print(o.c(_BOLD, "  TOP ATACANTES"))
     for att in rank_attackers(alerts)[:10]:
-        print(f"  {o.sev(att.max_severity)} {att.ip:<18} risco {att.score:>3}  "
+        print(f"  {o.sev(att.max_severity)} {safe(att.ip):<18} risco {att.score:>3}  "
               f"{o.c(_DIM, ','.join(att.sources) + '  ' + ' '.join(att.rules))}")
     counts = {s: sum(1 for a in alerts if a.severity == s) for s in Severity}
     resumo = " · ".join(f"{s.label}: {counts[s]}" for s in sorted(Severity, reverse=True))
